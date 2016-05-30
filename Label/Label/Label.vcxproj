@@ -146,11 +146,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Controller.h" />
+    <ClInclude Include="IControl.h" />
     <ClInclude Include="Label.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="IControl.cpp" />
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
