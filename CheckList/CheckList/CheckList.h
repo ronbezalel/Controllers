@@ -17,6 +17,8 @@ protected:
 	short currentRow;
 	short currentPosition;
 	int rowMaxLength;
+	DWORD generalDw;
+	bool hoverEnable;
 
 	//private func:
 	void MoveUp();
@@ -28,14 +30,22 @@ protected:
 
 public:
 	CheckList(string* textList, int listSize, short width, short height, DWORD color);
-	void Print();
+	CheckList(int height, int width, vector<string> options);
 	string GetInput();
 	void KeyEventProc(KEY_EVENT_RECORD ker);
 	void MouseEventProc(MOUSE_EVENT_RECORD mer);
 	void HandleInput(INPUT_RECORD iRecord);
 	bool* GetChosenRows();
 	~CheckList();
+	void SetForeground(ForegroundColor color);
+	void SetBackground(BackgroundColor color);
+	void SetBorder(BorderType _border);
+	void Hide();
+	void Show() const {};
+	void SelectIndex(size_t index);
+	void DeselectIndex(size_t index);
+	vector<size_t> GetSelectedIndices();
+	void Show();
 };
 
 #endif
-

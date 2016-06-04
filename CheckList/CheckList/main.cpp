@@ -1,4 +1,3 @@
-
 #include <Windows.h>
 #include <stdio.h>
 #include "CheckList.h"
@@ -26,8 +25,38 @@ int main() {
 		"line 5"
 	};
 
-	CheckList controller = CheckList(list, 5, 5, 5, dw);
-	controller.Print();
+	vector<string> list1 = {
+		"line 1",
+		"line 2",
+		"line 3",
+		"line 4",
+		"line 5"
+	};
+
+	Label l = Label(2, "Yossi gay 5");
+	l.SetBackground(BackgroundColor::White);
+	l.SetForeground(ForegroundColor::Red);
+	l.SetBorder(BorderType::None);
+	l.Show();
+
+	//original ctor
+	//CheckList controller = CheckList(list, 5, 5, 5, dw);
+	//new ctor
+	CheckList controller = CheckList(5, 5, list1);
+	controller.SetForeground(ForegroundColor::White);
+	controller.SetBackground(BackgroundColor::Green);
+	controller.SetBorder(BorderType::Single);
+	controller.SelectIndex(2);
+	Sleep(1111);
+	controller.DeselectIndex(2);
+	controller.Show();
+	Sleep(1111);
+	controller.SelectIndex(2);
+	Sleep(1111);
+	controller.SelectIndex(5);
+	//Sleep(1000);
+	//controller.Hide();
+	vector<size_t> res = controller.GetSelectedIndices();
 
 	DWORD cNumRead, fdwMode, i;
 	INPUT_RECORD irInBuf[128];
