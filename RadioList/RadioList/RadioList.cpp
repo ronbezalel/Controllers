@@ -7,6 +7,11 @@ RadioList::RadioList(string* textList, int listSize, short width, short hieght, 
 
 }
 
+RadioList::RadioList(int height, int width, vector<string> options) :
+	CheckList(height, width, options) {
+
+}
+
 void RadioList::Mark() {
 	if (chosen[currentRow]) {
 		string newText = list[currentRow].GetInput();
@@ -67,6 +72,37 @@ string RadioList::GetInput() {
 	}
 	if (!flage) return "no choose";
 	return list[index].GetInput();
+}
+
+size_t RadioList::GetSelectedIndex() {
+	for (int i = 0; i < list.size(); i++) {
+		if (chosen[i]) {
+			return i + 1;
+		}
+	}
+}
+void RadioList::SetSelectIndex(size_t index) {
+	if (index > list.size() || index < 1) {
+		return;
+	}
+	for (int i = 0; i < list.size(); i++) {
+		if (chosen[i] && (i + 1) != index) {
+			chosen[i] = false;
+			string newText = list[i].GetInput();
+			newText[1] = ' ';
+			list[i].SetValue(newText);
+			if (hoverEnable) {
+				list[i].Print();
+			}
+		}
+	}
+	chosen[index - 1] = true;
+	string newText = list[index - 1].GetInput();
+	newText[1] = 'X';
+	list[index - 1].SetValue(newText);
+	if (hoverEnable) {
+		list[index - 1].Print();
+	}
 }
 
 RadioList::~RadioList() {

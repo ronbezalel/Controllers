@@ -2,13 +2,13 @@
 #define _LABEL_H_
 
 #include <Windows.h>
-#include "Controller.h"
+#include "IControl.h"
 #include <stdio.h>
 #include <string>
 #include <iostream>
 
 using namespace std;
-class Label : Controller {
+class Label : public IControl {
 private:
 	//COORD cord = { 0,0 };
 	//HANDLE handle;
@@ -19,20 +19,26 @@ private:
 
 public:
 	Label(short width, short height, string text, bool isVisible);
+	Label(int width, string value);// api ctor
 	COORD GetCord();
 	string GetInput();
 	DWORD GetColor();
+	void Hide();
 	void SetColor(DWORD color);
 	void SetCursorEnable(bool enable);
+	void SetCoord(COORD newCoord);
+	void SetValue(string value);
 	void SwitchContent(string newText);
+	void Show() const;
 	void Print() const;
-	void Hoover(bool isHover);
-	int Length();
+	void Hoover(bool isHover, DWORD newDw);
+	int Length() const;
 	void CleanLabel();
+	void SetForeground(ForegroundColor color);
+	void SetBackground(BackgroundColor color);
+	void SetBorder(BorderType _border);
 	~Label();
 };
 
 
 #endif // !_LABEL_H_
-
-

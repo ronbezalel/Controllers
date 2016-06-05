@@ -13,18 +13,114 @@ CheckList::CheckList(string* textList, int listSize, short width, short height, 
 		if (rowMaxLength < textList[i].size() + 4) rowMaxLength = textList[i].size() + 4;
 		list[i].SetColor(color);
 	}
-	list[0].Hoover(true);
+	list[0].Hoover(true, color);
 	chosen = new bool[listSize];
 	for (int j = 0; j < listSize; j++) {
 		chosen[j] = false;
 	}
 }
 
-void CheckList::Print() {
+CheckList::CheckList(int height, int width, vector<string> options) :
+	InterActiveController(width, height), currentRow(0), currentPosition(0), rowMaxLength(0), hoverEnable(false)
+{
+	//generalDw = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+	int row = height;
+	currentPosition = height;
+	for (int i = 0; i < options.size(); i++) {
+		list.push_back(Label(width, row++, "[ ] " + options[i], false));
+		if (rowMaxLength < options[i].size() + 4) rowMaxLength = options[i].size() + 4;
+		list[i].SetColor(generalDw);
+	}
+	//list[0].Hoover(true);
+	chosen = new bool[options.size()];
+	for (int j = 0; j < options.size(); j++) {
+		chosen[j] = false;
+	}
+}
+
+void CheckList::Show() {
+	/*for (std::vector<Label>::const_iterator i = list.begin(); i != list.end(); i++) {
+	i->Print();
+	}
+	SetConsoleCursorPosition(handle, coord);*/
+
+	SetConsoleCursorPosition(handle, coord);
+	SetConsoleTextAttribute(handle, generalDw);
+	char luCorner, ruCorner, ldCorner, rdCorner, vertical, horizontal;
+	if (border == BorderType::Single) {
+		luCorner = '\xDA';
+		horizontal = '\xC4';
+		ruCorner = '\xBF';
+		vertical = '\xB3';
+		rdCorner = '\xD9';
+		ldCorner = '\xC0';
+	}
+	else if (border == BorderType::Double) {
+		luCorner = '\xC9';
+		horizontal = '\xCD';
+		ruCorner = '\xBB';
+		vertical = '\xBA';
+		rdCorner = '\xBC';
+		ldCorner = '\xC8';
+	}
+	else
+	{
+		for (std::vector<Label>::const_iterator i = list.begin(); i != list.end(); i++) {
+			i->Print();
+		}
+		SetConsoleCursorPosition(handle, coord);
+		hoverEnable = true;
+		return;
+	}
+	short length = (short)rowMaxLength;
+	for (short j = coord.Y; j < coord.Y + list.size() + 2; j++) {
+		for (short i = coord.X; i < coord.X + length + 2; i++) {
+			COORD tmpCoord = { i,j };
+			SetConsoleCursorPosition(handle, tmpCoord);
+			SetConsoleTextAttribute(handle, generalDw);
+			if (i == coord.X) {
+				if (j == coord.Y) {
+					cout << luCorner;
+				}
+				else if (j == coord.Y + list.size() + 1) {
+					cout << ldCorner;
+				}
+				else
+				{
+					cout << vertical;
+				}
+				continue;
+			}
+			if (i == coord.X + length + 1) {
+				if (j == coord.Y) {
+					cout << ruCorner;
+				}
+				else if (j == coord.Y + list.size() + 1) {
+					cout << rdCorner;
+				}
+				else
+				{
+					cout << vertical;
+				}
+				continue;
+			}
+			else {
+				cout << horizontal;
+			}
+		}
+	}
+	coord = { coord.X + 1 , coord.Y + 1 };
+	SetConsoleCursorPosition(handle, coord);
+	for (short i = 0; i < list.size(); i++) {
+		COORD newCoord = { coord.X , coord.Y + i };
+		list[i].SetCoord(newCoord);
+	}
 	for (std::vector<Label>::const_iterator i = list.begin(); i != list.end(); i++) {
 		i->Print();
 	}
 	SetConsoleCursorPosition(handle, coord);
+	hoverEnable = true;
+	return;
 }
 bool* CheckList::GetChosenRows() {
 	return chosen;
@@ -66,24 +162,32 @@ void CheckList::MouseEventProc(MOUSE_EVENT_RECORD mer) {
 void CheckList::MousePressed(MOUSE_EVENT_RECORD mer) {
 	int res = CheckPosition(mer);
 	if (res != -1) {
-		list[currentRow].Hoover(false);
+		if (hoverEnable) {
+			list[currentRow].Hoover(false, generalDw);
+		}
 		currentRow = res - coord.Y;
 		currentPosition = res;
 		COORD newPosition = { coord.X , currentPosition };
 		SetConsoleCursorPosition(handle, newPosition);
-		list[currentRow].Hoover(true);
+		if (hoverEnable) {
+			list[currentRow].Hoover(true, generalDw);
+		}
 		Mark();
 	}
 }
 void CheckList::MouseMoved(MOUSE_EVENT_RECORD mer) {
 	int res = CheckPosition(mer);
 	if (res != -1) {
-		list[currentRow].Hoover(false);
+		if (hoverEnable) {
+			list[currentRow].Hoover(false, generalDw);
+		}
 		currentRow = res - coord.Y;
 		currentPosition = res;
 		COORD newPosition = { coord.X , currentPosition };
 		SetConsoleCursorPosition(handle, newPosition);
-		list[currentRow].Hoover(true);
+		if (hoverEnable) {
+			list[currentRow].Hoover(true, generalDw);
+		}
 	}
 	else return;
 }
@@ -118,22 +222,31 @@ void CheckList::KeyEventProc(KEY_EVENT_RECORD ker) {
 }
 void CheckList::MoveUp() {
 	if (currentPosition != coord.Y) {
-		list[currentRow].Hoover(false);
+		if (hoverEnable) {
+			list[currentRow].Hoover(false, generalDw);
+		}
 		currentRow--;
 		currentPosition--;
 		COORD newPosition = { coord.X , currentPosition };
 		SetConsoleCursorPosition(handle, newPosition);
-		list[currentRow].Hoover(true);
+		if (hoverEnable) {
+			list[currentRow].Hoover(true, generalDw);
+		}
 	}
 }
 void CheckList::MoveDown() {
 	if (currentPosition != coord.Y + list.size() - 1) {
-		list[currentRow].Hoover(false);
+		if (hoverEnable) {
+			list[currentRow].Hoover(false, generalDw);
+		}
+		list[currentRow].Hoover(false, generalDw);
 		currentRow++;
 		currentPosition++;
 		COORD newPosition = { coord.X , currentPosition };
 		SetConsoleCursorPosition(handle, newPosition);
-		list[currentRow].Hoover(true);
+		if (hoverEnable) {
+			list[currentRow].Hoover(true, generalDw);
+		}
 	}
 }
 void CheckList::Mark() {
@@ -177,4 +290,144 @@ string CheckList::GetInput() {
 
 CheckList::~CheckList() {
 	free(chosen);
+}
+
+void CheckList::SetForeground(ForegroundColor color)
+{
+	switch (color)
+	{
+	case ForegroundColor::Red:
+		generalDw = generalDw | (FOREGROUND_RED);
+		break;
+	case ForegroundColor::Blue:
+		generalDw = generalDw | (FOREGROUND_BLUE);
+		break;
+	case ForegroundColor::Green:
+		generalDw = generalDw | (FOREGROUND_GREEN);
+		break;
+	case ForegroundColor::Purple:
+		generalDw = generalDw | (FOREGROUND_RED | FOREGROUND_BLUE);
+		break;
+	case ForegroundColor::Teal:
+		generalDw = generalDw | (FOREGROUND_RED | FOREGROUND_GREEN);
+		break;
+	case ForegroundColor::Yellow:
+		generalDw = generalDw | (FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+		break;
+	case ForegroundColor::White:
+		generalDw = generalDw | (FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		break;
+	case ForegroundColor::Black:
+		generalDw = generalDw | !(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		break;
+	default:
+		break;
+	}
+	for (int i = 0; i < list.size(); i++) {
+		list[i].SetColor(generalDw);
+	}
+
+}
+void CheckList::SetBackground(BackgroundColor color)
+{
+	switch (color)
+	{
+	case BackgroundColor::Red:
+		generalDw = generalDw | (BACKGROUND_RED);
+		break;
+	case BackgroundColor::Blue:
+		generalDw = generalDw | (BACKGROUND_BLUE);
+		break;
+	case BackgroundColor::Green:
+		generalDw = generalDw | (BACKGROUND_GREEN);
+		break;
+	case BackgroundColor::Purple:
+		generalDw = generalDw | (BACKGROUND_RED | BACKGROUND_BLUE);
+		break;
+	case BackgroundColor::Teal:
+		generalDw = generalDw | (BACKGROUND_RED | BACKGROUND_GREEN);
+		break;
+	case BackgroundColor::Yellow:
+		generalDw = generalDw | (BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_INTENSITY);
+		break;
+	case BackgroundColor::White:
+		generalDw = generalDw | (BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE);
+		break;
+	case BackgroundColor::Black:
+		generalDw = generalDw | !(BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE);
+		break;
+	default:
+		break;
+	}
+	for (int i = 0; i < list.size(); i++) {
+		list[i].SetColor(generalDw);
+	}
+}
+void CheckList::SetBorder(BorderType _border) {
+	border = _border;
+}
+
+void CheckList::Hide() {
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	DWORD blackDw = (FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	SetConsoleTextAttribute(handle, blackDw);
+	short length = (short)rowMaxLength;
+	if (border == BorderType::None) {
+		COORD crd = coord;
+		SetConsoleCursorPosition(handle, crd);
+		for (short j = crd.Y; j < crd.Y + list.size(); j++) {
+			for (short i = crd.X; i < crd.X + length; i++) {
+				COORD tmpCrd = { i,j };
+				SetConsoleCursorPosition(handle, tmpCrd);
+				cout << " ";
+			}
+		}
+	}
+	else {
+		COORD crd = { coord.X - 1 , coord.Y - 1 };
+		SetConsoleCursorPosition(handle, crd);
+		for (short j = crd.Y; j < crd.Y + list.size() + 2; j++) {
+			for (short i = crd.X; i < crd.X + length + 2; i++) {
+				COORD tmpCrd = { i , j };
+				SetConsoleCursorPosition(handle, tmpCrd);
+				cout << " ";
+			}
+		}
+	}
+	hoverEnable = false;
+}
+
+void CheckList::SelectIndex(size_t index) {
+	if (index > list.size() || index < 1) {
+		return;
+	}
+	chosen[index - 1] = true;
+	string newText = list[index - 1].GetInput();
+	newText[1] = 'X';
+	list[index - 1].SetValue(newText);
+	if (hoverEnable) {
+		list[index - 1].Print();
+	}
+}
+void CheckList::DeselectIndex(size_t index) {
+	if (index > list.size() || index < 1) {
+		return;
+	}
+	chosen[index - 1] = false;
+	string newText = list[index - 1].GetInput();
+	newText[1] = ' ';
+	list[index - 1].SetValue(newText);
+	if (hoverEnable) {
+		list[index - 1].Print();
+	}
+}
+
+vector<size_t> CheckList::GetSelectedIndices() {
+	vector<size_t> res;
+	for (int i = 0; i < list.size(); i++) {
+		if (chosen[i]) {
+			res.push_back(i + 1);
+		}
+	}
+	return res;
 }
