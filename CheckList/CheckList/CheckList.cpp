@@ -69,6 +69,7 @@ void CheckList::Show() {
 			i->Print();
 		}
 		SetConsoleCursorPosition(handle, coord);
+		hoverEnable = true;
 		return;
 	}
 	short length = (short)rowMaxLength;
