@@ -1,4 +1,3 @@
-#pragma once
 #ifndef _LABEL_H_
 #define _LABEL_H_
 
@@ -13,27 +12,31 @@ class Label : public IControl {
 private:
 	//COORD cord = { 0,0 };
 	//HANDLE handle;
-	//DWORD dw;
+	DWORD dw;
 	CONSOLE_CURSOR_INFO cci;
 	string labelText;
 
 
 public:
 	Label(short width, short height, string text, bool isVisible);
-	Label(int width, string value);		// api ctor 
+	Label(int width, string value);// api ctor
 	COORD GetCord();
 	string GetInput();
 	DWORD GetColor();
-	void SetHeight(int height);			// api set height default value to 0 
+	void Hide();
 	void SetColor(DWORD color);
 	void SetCursorEnable(bool enable);
-	void SwitchContent(string newText);
+	void SetCoord(COORD newCoord);
 	void SetValue(string value);
+	void SwitchContent(string newText);
 	void Show() const;
-	void Hide();
-	void Hoover(bool isHover);
+	void Print() const;
+	void Hoover(bool isHover, DWORD newDw);
 	int Length() const;
 	void CleanLabel();
+	void SetForeground(ForegroundColor color);
+	void SetBackground(BackgroundColor color);
+	void SetBorder(BorderType _border);
 	~Label();
 };
 

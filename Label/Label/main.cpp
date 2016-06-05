@@ -13,7 +13,6 @@ int main() {
 	/* Label Main */
 	//Label l = Label(15, 0, "label for example", true);
 	Label l = Label(15, "Yossi gay");
-	l.SetHeight(3);
 	/*DWORD dw = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY;
 	l.SetColor(dw);*/
 	l.SetForeground(ForegroundColor::White);
@@ -21,7 +20,8 @@ int main() {
 	l.SetValue("yossi gay 2");
 	l.Show();
 	////////////////////////////////////////////////////////////////////////////////////////
-
+	Sleep(1111);
+	l.Hide();
 
 	DWORD cNumRead, fdwMode, i;
 	INPUT_RECORD irInBuf[128];
