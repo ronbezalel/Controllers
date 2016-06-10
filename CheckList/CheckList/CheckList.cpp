@@ -217,6 +217,7 @@ void CheckList::KeyEventProc(KEY_EVENT_RECORD ker) {
 			MoveDown();
 			break;
 		case VK_RETURN:
+		case VK_SPACE:
 			Mark();
 			break;
 		default:
