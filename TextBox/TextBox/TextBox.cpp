@@ -3,7 +3,7 @@
 
 
 TextBox::TextBox(int boxLength, short width, short height) :
-	InterActiveController(width, height), textIndex(0), focus(false), enableWrite(false)
+	InterActiveController(0, 0), textIndex(0), focus(false), enableWrite(false)
 {
 	boxSize = boxLength;
 	text = vector<char>(boxLength);
@@ -16,7 +16,7 @@ TextBox::TextBox(int boxLength, short width, short height) :
 }
 
 TextBox::TextBox(int width):
-	InterActiveController(5, 5), textIndex(0), focus(false), enableWrite(false)
+	InterActiveController(0, 0), textIndex(0), focus(false), enableWrite(false)
 {
 	boxSize = width;
 	text = vector<char>(width);

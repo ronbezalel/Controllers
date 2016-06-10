@@ -11,3 +11,7 @@ IControl::IControl(short width, short height) {
 }
 
 IControl::~IControl() {}
+
+void IControl::SetCoordinates(short x, short y) {
+	coord = { x,y };
+}

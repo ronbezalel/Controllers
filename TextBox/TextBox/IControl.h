@@ -25,6 +25,7 @@ public:
 	virtual ~IControl();
 	virtual void Show() const = 0;
 	virtual void Hide() = 0;
+	void SetCoordinates(short x, short y);
 	virtual string GetValue() = 0;
 	virtual void SetForeground(ForegroundColor color) = 0;
 	virtual void SetBackground(BackgroundColor color) = 0;

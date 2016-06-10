@@ -20,7 +20,10 @@ int main() {
 	controller.SetBorder(BorderType::None);
 	//controller.Show();
 	//Sleep(1111);
+	controller.SetCoordinates(5, 5);
 	controller.Show();
+
+
 	
 
 	DWORD cNumRead, fdwMode, i;
