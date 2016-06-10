@@ -18,8 +18,8 @@ int main() {
 	l.SetForeground(ForegroundColor::White);
 	l.SetBorder(BorderType::Double);
 	l.SetValue("yossi gay 2");
+	l.SetCoordinates(50, 80);
 	l.Show();
-	////////////////////////////////////////////////////////////////////////////////////////
 	Sleep(1111);
 	l.Hide();
 
