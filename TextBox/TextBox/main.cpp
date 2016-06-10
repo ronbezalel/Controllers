@@ -13,8 +13,15 @@ int main() {
 	DWORD dw = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY;
 	////////////////////////////////////////////////////////////////////////////////////////
 
-	TextBox controller = TextBox(20, 5, 5);
-	controller.Print();
+	//TextBox controller = TextBox(20, 5, 5);
+	TextBox controller = TextBox(20);
+	controller.SetForeground(ForegroundColor::Green);
+	controller.SetBackground(BackgroundColor::Red);
+	controller.SetBorder(BorderType::None);
+	//controller.Show();
+	//Sleep(1111);
+	controller.Show();
+	
 
 	DWORD cNumRead, fdwMode, i;
 	INPUT_RECORD irInBuf[128];
@@ -34,6 +41,7 @@ int main() {
 		ErrorExit("SetConsoleMode");
 
 	// Loop to read and handle the next 100 input events. 
+	int j = 0;
 	while (true)
 	{
 		// Wait for the events. 
@@ -54,6 +62,7 @@ int main() {
 
 	// Restore input mode on exit.
 	SetConsoleMode(hStdin, fdwSaveOldMode);
+	
 	return 0;
 }
 

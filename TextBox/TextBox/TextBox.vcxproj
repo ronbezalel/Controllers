@@ -146,12 +146,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Controller.h" />
+    <ClInclude Include="IControl.h" />
     <ClInclude Include="InterActiveController.h" />
     <ClInclude Include="TextBox.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="IControl.cpp" />
     <ClCompile Include="InterActiveController.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TextBox.cpp" />

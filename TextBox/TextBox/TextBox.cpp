@@ -3,16 +3,33 @@
 
 
 TextBox::TextBox(int boxLength, short width, short height) :
-	InterActiveController(width, height), textIndex(0), focus(false)
+	InterActiveController(width, height), textIndex(0), focus(false), enableWrite(false)
 {
 	boxSize = boxLength;
 	text = vector<char>(boxLength);
 	CONSOLE_CURSOR_INFO newCci = { 100, true };
 	SetConsoleCursorInfo(handle, &newCci);
+	SetBorder(BorderType::Single);
+	for (int i = 0; i < width; i++) {
+		text[i] = ' ';
+	}
+}
+
+TextBox::TextBox(int width):
+	InterActiveController(5, 5), textIndex(0), focus(false), enableWrite(false)
+{
+	boxSize = width;
+	text = vector<char>(width);
+	CONSOLE_CURSOR_INFO newCci = { 100, true };
+	SetConsoleCursorInfo(handle, &newCci);
+	SetBorder(BorderType::Single);
+	for (int i = 0; i < width; i++) {
+		text[i] = ' ';
+	}
 }
 
 void TextBox::Print() {
-	DWORD dw = FOREGROUND_BLUE | BACKGROUND_RED | FOREGROUND_INTENSITY;
+	DWORD dw = textDw;
 	for (short i = coord.X; i < coord.X + boxSize + 2; i++) {
 		COORD tmpCoord = { i,coord.Y };
 		SetConsoleCursorPosition(handle, tmpCoord);
@@ -57,6 +74,7 @@ TextBox::~TextBox()
 
 void TextBox::HandleInput(INPUT_RECORD iRecord) {
 	//if (!isClicked) return;
+	if (!enableWrite) return;
 	switch (iRecord.EventType)
 	{
 	case KEY_EVENT: // keyboard input 
@@ -91,11 +109,26 @@ void TextBox::MouseEventProc(MOUSE_EVENT_RECORD mer) {
 void TextBox::MousePressed(MOUSE_EVENT_RECORD mer) {
 	int res = CheckPosition(mer);
 	if (res != -1) {
+		res = LastLetterIndex(res);
 		curserPosition = res;
 		textIndex = res - coord.X - 1;
 		COORD reset = { res , coord.Y + 1 };
 		SetConsoleCursorPosition(handle, reset);
 		focus = true;
+	}
+}
+
+int TextBox::LastLetterIndex(int position) {
+	int currentIndex = position - coord.X - 1;
+	int lastLetter = 0;
+	for (int i = 0; i < text.size(); i++) {
+		if (text[i] != ' ') lastLetter = i;
+	}
+	if (currentIndex > lastLetter) {
+		return coord.X + lastLetter + 2;
+	}
+	else {
+		return position;
 	}
 }
 
@@ -122,6 +155,9 @@ void TextBox::KeyEventProc(KEY_EVENT_RECORD ker) {
 			MoveRight();
 			break;
 		case VK_BACK:
+			BackSpace();
+			break;
+		case VK_DELETE:
 			Delete();
 			break;
 		default:
@@ -143,14 +179,17 @@ void TextBox::MoveLeft() {
 }
 
 void TextBox::MoveRight() {
-	if (curserPosition < coord.X + boxSize + 1) {
+	if (curserPosition < coord.X + boxSize +1) {
 		curserPosition++;
 		COORD right = { curserPosition , coord.Y + 1 };
 		SetConsoleCursorPosition(handle, right);
 		if (focus) {
 			textIndex++;
 		}
-		else focus = true;
+		else {
+			focus = true;
+			textIndex++;
+		}
 	}
 }
 
@@ -173,6 +212,29 @@ void TextBox::Delete() {
 	}
 }
 
+void TextBox::BackSpace() {
+	if (focus) {
+		if(textIndex == 0){
+			return;
+		}
+		for (int i = textIndex - 1; i < boxSize; i++) {
+			if (i == boxSize - 1) {
+				text[i] = ' ';
+				cout << text[i];
+				break;
+			}
+			text[i] = text[i+1];
+		}
+		string tmpText(text.begin(), text.end());
+		COORD reset = { coord.X + 1 , coord.Y + 1 };
+		SetConsoleCursorPosition(handle, reset);
+		cout << tmpText;
+		COORD newPosition = { --curserPosition , coord.Y + 1 }; 
+		SetConsoleCursorPosition(handle, newPosition);
+		--textIndex;
+	}
+}
+
 void TextBox::AddCharecter(char c) {
 	if (focus) {
 		if (textIndex < boxSize) {
@@ -185,16 +247,190 @@ void TextBox::AddCharecter(char c) {
 
 void TextBox::SetText(string textToEnter) {
 	if (textToEnter.size() < text.size()) {
-		COORD reset = { coord.X + 1 , coord.Y + 1 };
-		SetConsoleCursorPosition(handle, reset);
-		cout << textToEnter;
 		for (int i = 0; i < textToEnter.size(); i++) {
 			text[i] = textToEnter[i];
 		}
 	}
 }
 
-string TextBox::GetInput() {
+string TextBox::GetValue() {
 	string str(text.begin(), text.end());
 	return str;
+}
+
+void TextBox::Show() const {
+	
+}
+
+void TextBox::Show(){
+	enableWrite = true;
+	DWORD dw = textDw;
+	char luCorner, ruCorner, ldCorner, rdCorner, vertical, horizontal;
+	if (border == BorderType::Single) {
+		luCorner = '\xDA';
+		horizontal = '\xC4';
+		ruCorner = '\xBF';
+		vertical = '\xB3';
+		rdCorner = '\xD9';
+		ldCorner = '\xC0';
+	}
+	else if (border == BorderType::Double) {
+		luCorner = '\xC9';
+		horizontal = '\xCD';
+		ruCorner = '\xBB';
+		vertical = '\xBA';
+		rdCorner = '\xBC';
+		ldCorner = '\xC8';
+	}
+	else {
+		for (int i = coord.X + 1; i < coord.X + boxSize + 1; i++) {
+			COORD tmpCoord = { i, coord.Y + 1 };
+			SetConsoleCursorPosition(handle, tmpCoord);
+			SetConsoleTextAttribute(handle, dw);
+			cout << text[i - (coord.X + 1)];
+		}
+		curserPosition = coord.X + 1;
+		COORD endPrint = { curserPosition, coord.Y + 1 };
+		SetConsoleCursorPosition(handle, endPrint);
+		return;
+	}
+
+	for (short i = coord.X; i < coord.X + boxSize + 2; i++) {
+		COORD tmpCoord = { i,coord.Y };
+		SetConsoleCursorPosition(handle, tmpCoord);
+		SetConsoleTextAttribute(handle, dw);
+		if (i == coord.X) {
+			tmpCoord.Y = tmpCoord.Y;
+			SetConsoleCursorPosition(handle, tmpCoord);
+			cout << luCorner;
+			tmpCoord.Y = tmpCoord.Y + 1;
+			SetConsoleCursorPosition(handle, tmpCoord);
+			cout << vertical;
+			tmpCoord.Y = tmpCoord.Y + 1;
+			SetConsoleCursorPosition(handle, tmpCoord);
+			cout << ldCorner;
+			continue;
+		}
+		if (i == coord.X + boxSize + 1) {
+			tmpCoord.Y = tmpCoord.Y;
+			SetConsoleCursorPosition(handle, tmpCoord);
+			cout << ruCorner;
+			tmpCoord.Y = tmpCoord.Y + 1;
+			SetConsoleCursorPosition(handle, tmpCoord);
+			cout << vertical;
+			tmpCoord.Y = tmpCoord.Y + 1;
+			SetConsoleCursorPosition(handle, tmpCoord);
+			cout << rdCorner;
+			continue;
+		}
+		cout << horizontal;
+		tmpCoord.Y = tmpCoord.Y + 1;
+		SetConsoleCursorPosition(handle, tmpCoord);
+		cout << text[i - (coord.X + 1)];
+		tmpCoord.Y = tmpCoord.Y + 1;
+		SetConsoleCursorPosition(handle, tmpCoord);
+		cout << horizontal;
+	}
+	curserPosition = coord.X + 1;
+	COORD endPrint = { curserPosition, coord.Y + 1 };
+	SetConsoleCursorPosition(handle, endPrint);
+}
+
+void TextBox::SetForeground(ForegroundColor color) {
+
+	switch (color)
+	{
+	case ForegroundColor::Red:
+		textDw = textDw | (FOREGROUND_RED);
+		break;
+	case ForegroundColor::Blue:
+		textDw = textDw | (FOREGROUND_BLUE);
+		break;
+	case ForegroundColor::Green:
+		textDw = textDw | (FOREGROUND_GREEN);
+		break;
+	case ForegroundColor::Purple:
+		textDw = textDw | (FOREGROUND_RED | FOREGROUND_BLUE);
+		break;
+	case ForegroundColor::Teal:
+		textDw = textDw | (FOREGROUND_RED | FOREGROUND_GREEN);
+		break;
+	case ForegroundColor::Yellow:
+		textDw = textDw | (FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+		break;
+	case ForegroundColor::White:
+		textDw = textDw | (FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		break;
+	case ForegroundColor::Black:
+		textDw = textDw | !(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		break;
+	default:
+		break;
+	}
+}
+void TextBox::SetBackground(BackgroundColor color) {
+	switch (color)
+	{
+	case BackgroundColor::Red:
+		textDw = textDw | (BACKGROUND_RED);
+		break;
+	case BackgroundColor::Blue:
+		textDw = textDw | (BACKGROUND_BLUE);
+		break;
+	case BackgroundColor::Green:
+		textDw = textDw | (BACKGROUND_GREEN);
+		break;
+	case BackgroundColor::Purple:
+		textDw = textDw | (BACKGROUND_RED | BACKGROUND_BLUE);
+		break;
+	case BackgroundColor::Teal:
+		textDw = textDw | (BACKGROUND_RED | BACKGROUND_GREEN);
+		break;
+	case BackgroundColor::Yellow:
+		textDw = textDw | (BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_INTENSITY);
+		break;
+	case BackgroundColor::White:
+		textDw = textDw | (BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE);
+		break;
+	case BackgroundColor::Black:
+		textDw = textDw | !(BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE);
+		break;
+	default:
+		break;
+	}
+}
+
+void TextBox::SetBorder(BorderType _border) {
+	border = _border;
+	if (border == BorderType::None) {
+		coord = { coord.X - 1, coord.Y - 1 };
+	}
+}
+
+void TextBox::Hide() {
+	CONSOLE_CURSOR_INFO newCci = { 100, false };
+	SetConsoleCursorInfo(handle, &newCci);
+	enableWrite = false;
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	DWORD blackDw = (FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	SetConsoleTextAttribute(handle, blackDw);
+	COORD crd = { coord.X , coord.Y };
+	SetConsoleCursorPosition(handle, crd);
+	short length = (short)boxSize;
+	if (border == BorderType::None) {
+		for (short j = crd.X; j < (coord.X + length); j++) {
+			COORD tmpCrd = { j , coord.Y };
+			SetConsoleCursorPosition(handle, tmpCrd);
+			cout << " ";
+		}
+	}
+	else {
+		for (short i = crd.Y; i < crd.Y + 3; i++) {
+			for (short j = crd.X; j < (coord.X + length) + 2; j++) {
+				COORD tmpCrd = { j , i };
+				SetConsoleCursorPosition(handle, tmpCrd);
+				cout << " ";
+			}
+		}
+	}
 }

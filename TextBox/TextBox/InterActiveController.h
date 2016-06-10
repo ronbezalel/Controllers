@@ -1,6 +1,6 @@
 #pragma once
-#include "Controller.h"
-class InterActiveController : public Controller {
+#include "IControl.h"
+class InterActiveController : public IControl {
 
 public:
 	InterActiveController(short width, short height);

@@ -3,7 +3,7 @@
 
 
 InterActiveController::InterActiveController(short width, short height) :
-	Controller(width, height)
+	IControl(width, height)
 {
 
 }
