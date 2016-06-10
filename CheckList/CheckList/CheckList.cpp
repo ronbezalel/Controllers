@@ -3,11 +3,11 @@
 
 
 CheckList::CheckList(string* textList, int listSize, short width, short height, DWORD color) :
-	InterActiveController(width, height), currentRow(0), currentPosition(0), rowMaxLength(0)
+	InterActiveController(0, 0), currentRow(0), currentPosition(0), rowMaxLength(0)
 {
-	int row = height;
-	coord = { width , height };
-	currentPosition = height;
+	int row = 0;
+	coord = { 0 , 0 };
+	currentPosition = 0;
 	for (int i = 0; i < listSize; i++) {
 		list.push_back(Label(width, row++, "[ ] " + textList[i], false));
 		if (rowMaxLength < textList[i].size() + 4) rowMaxLength = textList[i].size() + 4;
@@ -21,20 +21,24 @@ CheckList::CheckList(string* textList, int listSize, short width, short height, 
 }
 
 CheckList::CheckList(int height, int width, vector<string> options):
-	InterActiveController(width, height), currentRow(0), currentPosition(0), rowMaxLength(0),hoverEnable(false)
+	InterActiveController(0, 0), currentRow(0), currentPosition(0), rowMaxLength(0),hoverEnable(false)
 {
 	//generalDw = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
-	int row = height;
-	currentPosition = height;
-	for (int i = 0; i < options.size(); i++) {
-		list.push_back(Label(width, row++, "[ ] " + options[i], false));
-		if (rowMaxLength < options[i].size() + 4) rowMaxLength = options[i].size() + 4;
-		list[i].SetColor(generalDw);
-	}
-	//list[0].Hoover(true);
-	chosen = new bool[options.size()];
-	for (int j = 0; j < options.size(); j++) {
-		chosen[j] = false;
+	if (options.size() <= height) {
+		int row = 0;
+		currentPosition = 0;
+		for (int i = 0; i < options.size(); i++) {
+			Label l = Label(width, row++, "[ ] " + options[i], false);
+			l.SetCoordinates(0, row);
+			list.push_back(l);
+			if (rowMaxLength < options[i].size() + 4) rowMaxLength = options[i].size() + 4;
+			list[i].SetColor(generalDw);
+		}
+		//list[0].Hoover(true);
+		chosen = new bool[options.size()];
+		for (int j = 0; j < options.size(); j++) {
+			chosen[j] = false;
+		}
 	}
 }
 
@@ -251,35 +255,39 @@ void CheckList::MoveDown() {
 }
 void CheckList::Mark() {
 	if (chosen[currentRow]) {
-		string newText = list[currentRow].GetInput();
+		string newText = list[currentRow].GetValue();
 		newText[1] = ' ';
+		int width = list[currentRow].GetWidth();
 		COORD newCoord = list[currentRow].GetCord();
 		DWORD color = list[currentRow].GetColor();
-		list[currentRow] = Label(newCoord.X, newCoord.Y, newText, false);
+		list[currentRow] = Label(width, 0, newText, false);
+		list[currentRow].SetCoordinates(newCoord.X, newCoord.Y);
 		list[currentRow].SetColor(color);
 		chosen[currentRow] = false;
 	}
 	else {
-		string newText = list[currentRow].GetInput();
+		string newText = list[currentRow].GetValue();
 		newText[1] = 'X';
 		COORD newCoord = list[currentRow].GetCord();
 		DWORD color = list[currentRow].GetColor();
-		list[currentRow] = Label(newCoord.X, newCoord.Y, newText, false);
+		int width = list[currentRow].GetWidth();
+		list[currentRow] = Label(width, 0, newText, false);
 		list[currentRow].SetColor(color);
+		list[currentRow].SetCoordinates(newCoord.X, newCoord.Y);
 		chosen[currentRow] = true;
 	}
 	list[currentRow].Print();
 	return;
 }
 
-string CheckList::GetInput() {
+string CheckList::GetValue() {
 	chosen[1] = true;
 	chosen[4] = true;
 	bool* rows = GetChosenRows();
 	string res = "";
 	for (int i = 0; i < list.size(); i++) {
 		if (rows[i]) {
-			string tmp = list[i].GetInput() + ',';
+			string tmp = list[i].GetValue() + ',';
 			for (int j = 4; j < tmp.size(); j++) {
 				res.push_back(tmp[j]);
 			}
@@ -402,7 +410,7 @@ void CheckList::SelectIndex(size_t index) {
 		return;
 	}
 	chosen[index - 1] = true;
-	string newText = list[index-1].GetInput();
+	string newText = list[index-1].GetValue();
 	newText[1] = 'X';
 	list[index - 1].SetValue(newText);
 	if (hoverEnable) {
@@ -414,7 +422,7 @@ void CheckList::DeselectIndex(size_t index) {
 		return;
 	}
 	chosen[index - 1] = false;
-	string newText = list[index - 1].GetInput();
+	string newText = list[index - 1].GetValue();
 	newText[1] = ' ';
 	list[index - 1].SetValue(newText);
 	if (hoverEnable) {
@@ -430,4 +438,11 @@ vector<size_t> CheckList::GetSelectedIndices() {
 		}
 	}
 	return res;
+}
+
+void CheckList::SetCoordinates(short x, short y) {
+	coord = { x,y };
+	for (short i = 0; i < list.size(); i++) {
+		list[i].SetCoordinates(x, y + i);
+	}
 }

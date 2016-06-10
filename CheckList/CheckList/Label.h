@@ -15,13 +15,14 @@ private:
 	DWORD dw;
 	CONSOLE_CURSOR_INFO cci;
 	string labelText;
+	int width;
 
 
 public:
 	Label(short width, short height, string text, bool isVisible);
 	Label(int width, string value);// api ctor
 	COORD GetCord();
-	string GetInput();
+	string GetValue();
 	DWORD GetColor();
 	void Hide();
 	void SetColor(DWORD color);
@@ -37,6 +38,7 @@ public:
 	void SetForeground(ForegroundColor color);
 	void SetBackground(BackgroundColor color);
 	void SetBorder(BorderType _border);
+	int GetWidth();
 	~Label();
 };
 
