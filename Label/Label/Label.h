@@ -38,6 +38,7 @@ public:
 	void SetForeground(ForegroundColor color);
 	void SetBackground(BackgroundColor color);
 	void SetBorder(BorderType _border);
+	int GetWidth();
 	~Label();
 };
 

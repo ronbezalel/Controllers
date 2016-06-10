@@ -25,7 +25,7 @@ public:
 	virtual void Show() const = 0;
 	virtual void Hide() = 0;
 	virtual string GetValue() = 0;
-	void SetCoordinates(short x, short y);
+	virtual void SetCoordinates(short x, short y);
 	virtual void SetForeground(ForegroundColor color) = 0;
 	virtual void SetBackground(BackgroundColor color) = 0;
 	virtual void SetBorder(BorderType _border) = 0;

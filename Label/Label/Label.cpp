@@ -252,3 +252,7 @@ void Label::SetBorder(BorderType _border) {
 void Label::SetValue(string value) {
 	labelText = value;
 }
+
+int Label::GetWidth() {
+	return width;
+}
