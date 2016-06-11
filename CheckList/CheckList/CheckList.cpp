@@ -21,7 +21,7 @@ CheckList::CheckList(string* textList, int listSize, short width, short height, 
 }
 
 CheckList::CheckList(int height, int width, vector<string> options):
-	InterActiveController(0, 0), currentRow(0), currentPosition(0), rowMaxLength(0),hoverEnable(false)
+	InterActiveController(0, 0), currentRow(0), currentPosition(0), rowMaxLength(0),hoverEnable(false), maxRowNumber(height), firstShow(true)
 {
 	//generalDw = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
 	if (options.size() <= height) {
@@ -35,8 +35,8 @@ CheckList::CheckList(int height, int width, vector<string> options):
 			list[i].SetColor(generalDw);
 		}
 		//list[0].Hoover(true);
-		chosen = new bool[options.size()];
-		for (int j = 0; j < options.size(); j++) {
+		chosen = new bool[height];
+		for (int j = 0; j < height; j++) {
 			chosen[j] = false;
 		}
 	}
@@ -47,7 +47,8 @@ void CheckList::Show() {
 		i->Print();
 	}
 	SetConsoleCursorPosition(handle, coord);*/
-
+	if (!firstShow) coord = { coord.X - 1, coord.Y - 1 };
+	else firstShow = false;
 	SetConsoleCursorPosition(handle, coord);
 	SetConsoleTextAttribute(handle, generalDw);
 	char luCorner, ruCorner, ldCorner, rdCorner, vertical, horizontal;
@@ -109,7 +110,8 @@ void CheckList::Show() {
 				continue;
 			}
 			else {
-				cout << horizontal;
+				if (j == coord.Y || j == coord.Y + list.size() + 1) cout << horizontal;
+				else cout << ' ';
 			}
 		}
 	}
@@ -209,10 +211,10 @@ void CheckList::KeyEventProc(KEY_EVENT_RECORD ker) {
 		switch (ker.wVirtualKeyCode)
 		{
 		case VK_UP:
-		case VK_NUMPAD2:
+		case VK_NUMPAD8:
 			MoveUp();
 			break;
-		case VK_NUMPAD8:
+		case VK_NUMPAD2:
 		case VK_DOWN:
 			MoveDown();
 			break;
@@ -226,7 +228,7 @@ void CheckList::KeyEventProc(KEY_EVENT_RECORD ker) {
 	}
 }
 void CheckList::MoveUp() {
-	if (currentPosition != coord.Y) {
+	if (currentPosition > coord.Y) {
 		if (hoverEnable) {
 			list[currentRow].Hoover(false, generalDw);
 		}
@@ -238,15 +240,39 @@ void CheckList::MoveUp() {
 			list[currentRow].Hoover(true, generalDw);
 		}
 	}
+	else {
+		if (hoverEnable) {
+			list[currentRow].Hoover(false, generalDw);
+		}
+		currentRow += list.size() - 1;
+		currentPosition += list.size() - 1;
+		COORD newPosition = { coord.X , currentPosition };
+		SetConsoleCursorPosition(handle, newPosition);
+		if (hoverEnable) {
+			list[currentRow].Hoover(true, generalDw);
+		}
+	}
 }
 void CheckList::MoveDown() {
-	if (currentPosition != coord.Y + list.size() - 1) {
+	if (currentPosition < coord.Y + list.size() - 1) {
 		if (hoverEnable) {
 			list[currentRow].Hoover(false, generalDw);
 		}
 		list[currentRow].Hoover(false, generalDw);
 		currentRow++;
 		currentPosition++;
+		COORD newPosition = { coord.X , currentPosition };
+		SetConsoleCursorPosition(handle, newPosition);
+		if (hoverEnable) {
+			list[currentRow].Hoover(true, generalDw);
+		}
+	}
+	else {
+		if (hoverEnable) {
+			list[currentRow].Hoover(false, generalDw);
+		}
+		currentRow -= list.size() - 1;
+		currentPosition -= list.size() - 1;
 		COORD newPosition = { coord.X , currentPosition };
 		SetConsoleCursorPosition(handle, newPosition);
 		if (hoverEnable) {
@@ -446,4 +472,29 @@ void CheckList::SetCoordinates(short x, short y) {
 	for (short i = 0; i < list.size(); i++) {
 		list[i].SetCoordinates(x, y + i);
 	}
+}
+
+bool CheckList::AddSelectedItem(string item) {
+	if (list.size() < maxRowNumber) {
+		int width = list[0].GetWidth();
+		Label l = Label(width, 0, "[ ] " + item, false);
+		l.SetColor(generalDw);
+		if (rowMaxLength < item.size() + 4) rowMaxLength = item.size() + 4;
+		list.push_back(l);
+		for (int i = 0; i < list.size(); i++) {
+			list[i].SetCoordinates(coord.X, coord.Y + i);
+		}
+		return true;
+	}
+	return false;
+}
+bool CheckList::RemoveSelectedItem(string item) {
+	for (int i = 0; i < list.size(); i++) {
+		string s = list[i].GetValue();
+		if (s == "[ ] " + item || s == "[X] " + item) {
+			list.erase(list.begin() + i);
+			return true;
+		}
+	}
+	return false;
 }

@@ -19,6 +19,8 @@ protected:
 	int rowMaxLength;
 	DWORD generalDw;
 	bool hoverEnable;
+	int maxRowNumber;
+	bool firstShow;
 
 	//private func:
 	void MoveUp();
@@ -46,6 +48,8 @@ public:
 	void DeselectIndex(size_t index);
 	vector<size_t> GetSelectedIndices();
 	void SetCoordinates(short x, short y);
+	bool AddSelectedItem(string item);
+	bool RemoveSelectedItem(string item);
 	void Show();
 };
 

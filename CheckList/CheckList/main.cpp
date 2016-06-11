@@ -29,8 +29,8 @@ int main() {
 		"line 1",
 		"line 2",
 		"line 3",
-		"line 4",
-		"line 5"
+		"xxxxxxxxxx",
+		"ff"
 	};
 
 	/*Label l = Label(2, "Yossi gay 5");
@@ -42,19 +42,30 @@ int main() {
 	//original ctor
 	//CheckList controller = CheckList(list, 5, 5, 5, dw);
 	//new ctor
-	CheckList controller = CheckList(5, 15, list1);
+	CheckList controller = CheckList(6, 15, list1);
 	controller.SetForeground(ForegroundColor::White);
 	controller.SetBackground(BackgroundColor::Green);
-	controller.SetBorder(BorderType::Single);
-	controller.SelectIndex(2);
+	controller.SetBorder(BorderType::Double);
+	//controller.SelectIndex(2);
+	//Sleep(1111);
+	//controller.DeselectIndex(2);
+	//controller.SetCoordinates(5, 5);
+	controller.Show();
+	Sleep(2222);
+	controller.Hide();
+	controller.AddSelectedItem("YOSSI GAY!");
+	//Sleep(1111);
+	//controller.Hide();
 	Sleep(1111);
-	controller.DeselectIndex(2);
-	controller.SetCoordinates(5, 5);
 	controller.Show();
 	Sleep(1111);
-	controller.SelectIndex(2);
+	controller.Hide();
+	controller.RemoveSelectedItem("YOSSI GAY!");
 	Sleep(1111);
-	controller.SelectIndex(5);
+	controller.Show();
+	/*controller.SelectIndex(2);
+	Sleep(1111);
+	controller.SelectIndex(4);*/
 	//Sleep(1000);
 	//controller.Hide();
 	vector<size_t> res = controller.GetSelectedIndices();
