@@ -8,7 +8,7 @@ public:
 	RadioList(int height, int width, vector<string> options);
 	~RadioList();
 	void Mark();
-	string GetInput();
+	string GetValue();
 	size_t GetSelectedIndex();
 	void SetSelectIndex(size_t index);
 

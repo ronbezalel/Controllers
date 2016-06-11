@@ -14,11 +14,13 @@ RadioList::RadioList(int height, int width, vector<string> options) :
 
 void RadioList::Mark() {
 	if (chosen[currentRow]) {
-		string newText = list[currentRow].GetInput();
+		string newText = list[currentRow].GetValue();
 		newText[1] = ' ';
+		int width = list[currentRow].GetWidth();
 		COORD newCoord = list[currentRow].GetCord();
 		DWORD color = list[currentRow].GetColor();
-		list[currentRow] = Label(newCoord.X, newCoord.Y, newText, false);
+		list[currentRow] = Label(width, 0, newText, false);
+		list[currentRow].SetCoordinates(newCoord.X, newCoord.Y);
 		list[currentRow].SetColor(color);
 		chosen[currentRow] = false;
 	}
@@ -32,20 +34,24 @@ void RadioList::Mark() {
 			}
 		}
 		if (oldChoice != -1) {
-			string unmark = list[oldChoice].GetInput();
+			string unmark = list[oldChoice].GetValue();
 			unmark[1] = ' ';
+			int width = list[oldChoice].GetWidth();
 			COORD unmarkCoord = list[oldChoice].GetCord();
 			DWORD unmarkcolor = list[oldChoice].GetColor();
-			list[oldChoice] = Label(unmarkCoord.X, unmarkCoord.Y, unmark, false);
+			list[oldChoice] = Label(width, 0, unmark, false);
+			list[oldChoice].SetCoordinates(unmarkCoord.X, unmarkCoord.Y);
 			list[oldChoice].SetColor(unmarkcolor);
 			list[oldChoice].Print();
 		}
 		//new chosen raw
-		string newText = list[currentRow].GetInput();
+		string newText = list[currentRow].GetValue();
 		newText[1] = 'X';
+		int width = list[currentRow].GetWidth();
 		COORD newCoord = list[currentRow].GetCord();
 		DWORD color = list[currentRow].GetColor();
-		list[currentRow] = Label(newCoord.X, newCoord.Y, newText, false);
+		list[currentRow] = Label(width, 0, newText, false);
+		list[currentRow].SetCoordinates(newCoord.X, newCoord.Y);
 		list[currentRow].SetColor(color);
 		chosen[currentRow] = true;
 	}
@@ -61,7 +67,7 @@ int RadioList::LongestOptios() {
 	return size;
 }
 
-string RadioList::GetInput() {
+string RadioList::GetValue() {
 	int index = 0;
 	bool flage = false;
 	for (index; index < list.size(); index++) {
@@ -71,7 +77,7 @@ string RadioList::GetInput() {
 		}
 	}
 	if (!flage) return "no choose";
-	return list[index].GetInput();
+	return list[index].GetValue();
 }
 
 size_t RadioList::GetSelectedIndex() {
@@ -88,7 +94,7 @@ void RadioList::SetSelectIndex(size_t index) {
 	for (int i = 0; i < list.size(); i++) {
 		if (chosen[i] && (i + 1) != index) {
 			chosen[i] = false;
-			string newText = list[i].GetInput();
+			string newText = list[i].GetValue();
 			newText[1] = ' ';
 			list[i].SetValue(newText);
 			if (hoverEnable) {
@@ -97,7 +103,7 @@ void RadioList::SetSelectIndex(size_t index) {
 		}
 	}
 	chosen[index - 1] = true;
-	string newText = list[index - 1].GetInput();
+	string newText = list[index - 1].GetValue();
 	newText[1] = 'X';
 	list[index - 1].SetValue(newText);
 	if (hoverEnable) {

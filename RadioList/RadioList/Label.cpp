@@ -1,18 +1,28 @@
 #include "Label.h";
 
-Label::Label(short width, short height, string text, bool isVisible) :
-	IControl(width, height)
+Label::Label(short width, short height, string value, bool isVisible) :
+	IControl(0, 0), width(width)
 {
-	//cord = { width, hieght };
-	labelText = text;
-	//handle = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetCursorEnable(isVisible);
+	if (value.size() > width) {
+		labelText = "Input out of max range";
+	}
+	else {
+		//cord = { width, hieght };
+		labelText = value;
+		//handle = GetStdHandle(STD_OUTPUT_HANDLE);
+		SetCursorEnable(isVisible);
+	}
 }
 Label::Label(int width, string value) :
-	IControl((short)width, 0)
+	IControl(0, 0), width(width)
 {
-	labelText = value;
-	SetCursorEnable(false);
+	if (value.size() > width) {
+		labelText = "Input out of max range";
+	}
+	else {
+		labelText = value;
+		SetCursorEnable(false);
+	}
 }
 void Label::SetCursorEnable(bool enable) {
 	CONSOLE_CURSOR_INFO newCci = { 100, enable };
@@ -20,7 +30,6 @@ void Label::SetCursorEnable(bool enable) {
 }
 void Label::SetColor(DWORD color) {
 	dw = color;
-
 }
 void Label::SwitchContent(string newText) {
 	labelText = newText;
@@ -30,7 +39,7 @@ void Label::SwitchContent(string newText) {
 COORD Label::GetCord() {
 	return coord;
 }
-string Label::GetInput() {
+string Label::GetValue() {
 	return labelText;
 }
 DWORD Label::GetColor() {
@@ -242,4 +251,8 @@ void Label::SetBorder(BorderType _border) {
 
 void Label::SetValue(string value) {
 	labelText = value;
+}
+
+int Label::GetWidth() {
+	return width;
 }

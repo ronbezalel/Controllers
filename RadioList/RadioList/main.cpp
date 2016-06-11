@@ -34,11 +34,11 @@ int main() {
 		"line 5"
 	};
 
-	Label l = Label(2, "Yossi gay 5");
-	l.SetBackground(BackgroundColor::White);
-	l.SetForeground(ForegroundColor::Red);
-	l.SetBorder(BorderType::None);
-	l.Show();
+	//Label l = Label(2, "Yossi gay 5");
+	//l.SetBackground(BackgroundColor::White);
+	//l.SetForeground(ForegroundColor::Red);
+	//l.SetBorder(BorderType::None);
+	//l.Show();
 
 	//original ctor
 	//CheckList controller = CheckList(list, 5, 5, 5, dw);
@@ -59,10 +59,11 @@ int main() {
 	//controller.Hide();
 	//vector<size_t> res = controller.GetSelectedIndices();
 
-	RadioList controller = RadioList(5, 5, list1);
+	RadioList controller = RadioList(5, 15, list1);
 	controller.SetForeground(ForegroundColor::White);
 	controller.SetBackground(BackgroundColor::Green);
-	controller.SetBorder(BorderType::Single);
+	controller.SetBorder(BorderType::Double);
+	controller.SetCoordinates(5, 5);
 	controller.Show();
 	Sleep(1111);
 	controller.SetSelectIndex(5);

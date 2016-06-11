@@ -19,6 +19,8 @@ protected:
 	int rowMaxLength;
 	DWORD generalDw;
 	bool hoverEnable;
+	int maxRowNumber;
+	bool firstShow;
 
 	//private func:
 	void MoveUp();
@@ -31,7 +33,7 @@ protected:
 public:
 	CheckList(string* textList, int listSize, short width, short height, DWORD color);
 	CheckList(int height, int width, vector<string> options);
-	string GetInput();
+	string GetValue();
 	void KeyEventProc(KEY_EVENT_RECORD ker);
 	void MouseEventProc(MOUSE_EVENT_RECORD mer);
 	void HandleInput(INPUT_RECORD iRecord);
@@ -45,6 +47,9 @@ public:
 	void SelectIndex(size_t index);
 	void DeselectIndex(size_t index);
 	vector<size_t> GetSelectedIndices();
+	void SetCoordinates(short x, short y);
+	bool AddSelectedItem(string item);
+	bool RemoveSelectedItem(string item);
 	void Show();
 };
 
