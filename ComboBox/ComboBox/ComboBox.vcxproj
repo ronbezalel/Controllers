@@ -152,6 +152,7 @@
     <ClInclude Include="InterActiveController.h" />
     <ClInclude Include="Label.h" />
     <ClInclude Include="RadioList.h" />
+    <ClInclude Include="TextBox.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CheckList.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RadioList.cpp" />
+    <ClCompile Include="TextBox.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

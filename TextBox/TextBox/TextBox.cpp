@@ -74,6 +74,9 @@ TextBox::~TextBox()
 
 void TextBox::HandleInput(INPUT_RECORD iRecord) {
 	//if (!isClicked) return;
+	SetConsoleTextAttribute(handle, textDw);
+	CONSOLE_CURSOR_INFO newCci = { 100, true };
+	SetConsoleCursorInfo(handle, &newCci);
 	if (!enableWrite) return;
 	switch (iRecord.EventType)
 	{

@@ -133,6 +133,7 @@ bool* CheckList::GetChosenRows() {
 }
 void CheckList::HandleInput(INPUT_RECORD iRecord) {
 	//if (!isClicked) return;
+	SetConsoleTextAttribute(handle, generalDw);
 	switch (iRecord.EventType)
 	{
 	case KEY_EVENT: // keyboard input 

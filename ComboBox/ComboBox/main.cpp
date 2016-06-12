@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <stdio.h>
 #include "ComboBox.h"
+#include "TextBox.h"
 
 HANDLE hStdin;
 DWORD fdwSaveOldMode;
@@ -18,6 +19,12 @@ int main() {
 
 
 	/* to test one of the controllers comment the "Label main" and un-commet the requested controller */
+
+	Label label = Label(40, "Eyal & Ron & Yossi");
+	label.SetForeground(ForegroundColor::Green);
+	label.SetCoordinates(20, 0);
+	label.Show();
+	Sleep(2222);
 	vector<string> list = {
 		"line 1",
 		"line 2",
@@ -25,17 +32,48 @@ int main() {
 		"xx",
 		"line 5"
 	};
-	ComboBox controller = ComboBox(15, list);
-	controller.SetForeground(ForegroundColor::White);
-	controller.SetBackground(BackgroundColor::Blue);
-	controller.SetBorder(BorderType::None);
-	controller.SetCoordinates(5,5);
-	controller.Show();
-	Sleep(1111);
-	controller.Hide();
-	//Sleep(1111);
-	//controller.SetCoordinates(7, 9);
-	controller.Show();
+	ComboBox combo = ComboBox(15, list);
+	combo.SetForeground(ForegroundColor::White);
+	combo.SetBackground(BackgroundColor::Blue);
+	combo.SetBorder(BorderType::None);
+	combo.SetCoordinates(0, 3);
+	combo.Show();
+	Sleep(2222);
+	combo.Hide();
+
+	RadioList radio = RadioList(5, 15, list);
+	radio.SetForeground(ForegroundColor::White);
+	radio.SetBackground(BackgroundColor::Blue);
+	radio.SetBorder(BorderType::Double);
+	radio.SetCoordinates(0, 10);
+	radio.Show();
+	Sleep(2222);
+	radio.Hide();
+
+	CheckList check = CheckList(5, 15, list);
+	check.SetForeground(ForegroundColor::White);
+	check.SetBackground(BackgroundColor::Blue);
+	check.SetBorder(BorderType::Single);
+	check.SetCoordinates(0, 18);
+	check.Show();
+	Sleep(2222);
+	check.Hide();
+
+	TextBox text = TextBox(40);
+	text.SetCoordinates(20, 5);
+	text.SetBackground(BackgroundColor::White);
+	text.SetForeground(ForegroundColor::Blue);
+	text.SetBorder(BorderType::Single);
+	text.Show();
+	Sleep(2222);
+	text.Hide();
+
+	combo.Show();
+	radio.Show();
+	text.Show();
+	check.Show();
+	label.Show();
+
 
 	DWORD cNumRead, fdwMode, i;
 	INPUT_RECORD irInBuf[128];
@@ -68,7 +106,10 @@ int main() {
 		// Dispatch the events to the appropriate handler. 
 		for (i = 0; i < cNumRead; i++) {
 			//Send the input record to the textbox handler
-			controller.HandleInput(irInBuf[i]);
+			combo.HandleInput(irInBuf[i]);
+			radio.HandleInput(irInBuf[i]);
+			check.HandleInput(irInBuf[i]);
+			text.HandleInput(irInBuf[i]);
 		}
 	}
 
