@@ -1,6 +1,6 @@
 #pragma once
-#include "Controller.h"
-class InterActiveController : public Controller {
+#include "IControl.h"
+class InterActiveController : public IControl {
 
 public:
 	InterActiveController(short width, short height);
@@ -9,4 +9,3 @@ public:
 	virtual void MouseEventProc(MOUSE_EVENT_RECORD mer) = 0;
 	virtual void HandleInput(INPUT_RECORD iRecord) = 0;
 };
-

@@ -47,7 +47,7 @@ void CheckList::Show() {
 	i->Print();
 	}
 	SetConsoleCursorPosition(handle, coord);*/
-	if (!firstShow) coord = { coord.X - 1, coord.Y - 1 };
+	if (!firstShow) coord = { coord.X - 1, coord.Y };
 	else firstShow = false;
 	SetConsoleCursorPosition(handle, coord);
 	SetConsoleTextAttribute(handle, generalDw);
@@ -184,6 +184,7 @@ void CheckList::MousePressed(MOUSE_EVENT_RECORD mer) {
 void CheckList::MouseMoved(MOUSE_EVENT_RECORD mer) {
 	int res = CheckPosition(mer);
 	if (res != -1) {
+		keyFocus = true;
 		if (hoverEnable) {
 			list[currentRow].Hoover(false, generalDw);
 		}
@@ -195,7 +196,10 @@ void CheckList::MouseMoved(MOUSE_EVENT_RECORD mer) {
 			list[currentRow].Hoover(true, generalDw);
 		}
 	}
-	else return;
+	else {
+		keyFocus = false;
+		return;
+	}
 }
 int CheckList::CheckPosition(MOUSE_EVENT_RECORD mer) {
 	int YAxis = mer.dwMousePosition.Y;
@@ -228,55 +232,59 @@ void CheckList::KeyEventProc(KEY_EVENT_RECORD ker) {
 	}
 }
 void CheckList::MoveUp() {
-	if (currentPosition > coord.Y) {
-		if (hoverEnable) {
-			list[currentRow].Hoover(false, generalDw);
+	if (keyFocus) {
+		if (currentPosition > coord.Y) {
+			if (hoverEnable) {
+				list[currentRow].Hoover(false, generalDw);
+			}
+			currentRow--;
+			currentPosition--;
+			COORD newPosition = { coord.X , currentPosition };
+			SetConsoleCursorPosition(handle, newPosition);
+			if (hoverEnable) {
+				list[currentRow].Hoover(true, generalDw);
+			}
 		}
-		currentRow--;
-		currentPosition--;
-		COORD newPosition = { coord.X , currentPosition };
-		SetConsoleCursorPosition(handle, newPosition);
-		if (hoverEnable) {
-			list[currentRow].Hoover(true, generalDw);
-		}
-	}
-	else {
-		if (hoverEnable) {
-			list[currentRow].Hoover(false, generalDw);
-		}
-		currentRow += list.size() - 1;
-		currentPosition += list.size() - 1;
-		COORD newPosition = { coord.X , currentPosition };
-		SetConsoleCursorPosition(handle, newPosition);
-		if (hoverEnable) {
-			list[currentRow].Hoover(true, generalDw);
+		else {
+			if (hoverEnable) {
+				list[currentRow].Hoover(false, generalDw);
+			}
+			currentRow += list.size() - 1;
+			currentPosition += list.size() - 1;
+			COORD newPosition = { coord.X , currentPosition };
+			SetConsoleCursorPosition(handle, newPosition);
+			if (hoverEnable) {
+				list[currentRow].Hoover(true, generalDw);
+			}
 		}
 	}
 }
 void CheckList::MoveDown() {
-	if (currentPosition < coord.Y + list.size() - 1) {
-		if (hoverEnable) {
+	if (keyFocus) {
+		if (currentPosition < coord.Y + list.size() - 1) {
+			if (hoverEnable) {
+				list[currentRow].Hoover(false, generalDw);
+			}
 			list[currentRow].Hoover(false, generalDw);
+			currentRow++;
+			currentPosition++;
+			COORD newPosition = { coord.X , currentPosition };
+			SetConsoleCursorPosition(handle, newPosition);
+			if (hoverEnable) {
+				list[currentRow].Hoover(true, generalDw);
+			}
 		}
-		list[currentRow].Hoover(false, generalDw);
-		currentRow++;
-		currentPosition++;
-		COORD newPosition = { coord.X , currentPosition };
-		SetConsoleCursorPosition(handle, newPosition);
-		if (hoverEnable) {
-			list[currentRow].Hoover(true, generalDw);
-		}
-	}
-	else {
-		if (hoverEnable) {
-			list[currentRow].Hoover(false, generalDw);
-		}
-		currentRow -= list.size() - 1;
-		currentPosition -= list.size() - 1;
-		COORD newPosition = { coord.X , currentPosition };
-		SetConsoleCursorPosition(handle, newPosition);
-		if (hoverEnable) {
-			list[currentRow].Hoover(true, generalDw);
+		else {
+			if (hoverEnable) {
+				list[currentRow].Hoover(false, generalDw);
+			}
+			currentRow -= list.size() - 1;
+			currentPosition -= list.size() - 1;
+			COORD newPosition = { coord.X , currentPosition };
+			SetConsoleCursorPosition(handle, newPosition);
+			if (hoverEnable) {
+				list[currentRow].Hoover(true, generalDw);
+			}
 		}
 	}
 }
@@ -308,8 +316,6 @@ void CheckList::Mark() {
 }
 
 string CheckList::GetValue() {
-	chosen[1] = true;
-	chosen[4] = true;
 	bool* rows = GetChosenRows();
 	string res = "";
 	for (int i = 0; i < list.size(); i++) {

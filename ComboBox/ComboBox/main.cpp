@@ -1,9 +1,6 @@
 
 #include <Windows.h>
 #include <stdio.h>
-#include "Label.h"
-#include "CheckList.h"
-#include "RadioList.h"
 #include "ComboBox.h"
 
 HANDLE hStdin;
@@ -21,16 +18,24 @@ int main() {
 
 
 	/* to test one of the controllers comment the "Label main" and un-commet the requested controller */
-	string list[5] = {
+	vector<string> list = {
 		"line 1",
 		"line 2",
 		"line 3",
-		"line 4",
+		"xx",
 		"line 5"
 	};
-
-	ComboBox controller = ComboBox(list, 5, 5, 5, dw);
-	controller.Print();
+	ComboBox controller = ComboBox(15, list);
+	controller.SetForeground(ForegroundColor::White);
+	controller.SetBackground(BackgroundColor::Blue);
+	controller.SetBorder(BorderType::None);
+	controller.SetCoordinates(5,5);
+	controller.Show();
+	Sleep(1111);
+	controller.Hide();
+	//Sleep(1111);
+	//controller.SetCoordinates(7, 9);
+	controller.Show();
 
 	DWORD cNumRead, fdwMode, i;
 	INPUT_RECORD irInBuf[128];

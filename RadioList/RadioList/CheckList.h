@@ -21,12 +21,13 @@ protected:
 	bool hoverEnable;
 	int maxRowNumber;
 	bool firstShow;
+	bool keyFocus;
 
 	//private func:
 	void MoveUp();
 	void MoveDown();
 	virtual void Mark();
-	void MousePressed(MOUSE_EVENT_RECORD mer);
+	void MousePressed(MOUSE_EVENT_RECORD moer);
 	void MouseMoved(MOUSE_EVENT_RECORD mer);
 	int CheckPosition(MOUSE_EVENT_RECORD mer);
 

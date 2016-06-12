@@ -1,16 +1,17 @@
 #include "RadioList.h"
 #include "Label.h"
-#include "Controller.h"
+#include "InterActiveController.h"
 
-class ComboBox : public Controller
+class ComboBox : public InterActiveController
 {
 private:
 	Label* chosenText;
 	RadioList* optionsList;
 	bool displayList = false;
 	int listSize;
+	bool firstShow;
 
-	void EraseList();
+	//void EraseList();
 	void KeyEventProc(KEY_EVENT_RECORD ker);
 	void MouseEventProc(MOUSE_EVENT_RECORD mer);
 	bool checkPosition(MOUSE_EVENT_RECORD mer);
@@ -19,10 +20,17 @@ private:
 
 public:
 	ComboBox(string* textList, int size, short width, short height, DWORD color);
+	ComboBox(int width, vector<string> options);
 	~ComboBox();
-	void Print();
+	void Show();
 	void HandleInput(INPUT_RECORD iRecord);
-	string GetInput();
+	string GetValue();
+	void SetForeground(ForegroundColor color);
+	void SetBackground(BackgroundColor color);
+	void SetBorder(BorderType _border);
+	void Hide();
+	void Show() const;
+	void SetCoordinates(short x, short y);
 
 };
 
