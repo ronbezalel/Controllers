@@ -42,8 +42,8 @@ int main() {
 	combo.Hide();
 
 	RadioList radio = RadioList(5, 15, list);
-	radio.SetForeground(ForegroundColor::White);
-	radio.SetBackground(BackgroundColor::Blue);
+	radio.SetForeground(ForegroundColor::Red);
+	radio.SetBackground(BackgroundColor::Black);
 	radio.SetBorder(BorderType::Double);
 	radio.SetCoordinates(0, 10);
 	radio.Show();
@@ -51,8 +51,8 @@ int main() {
 	radio.Hide();
 
 	CheckList check = CheckList(5, 15, list);
-	check.SetForeground(ForegroundColor::White);
-	check.SetBackground(BackgroundColor::Blue);
+	check.SetForeground(ForegroundColor::Purple);
+	check.SetBackground(BackgroundColor::Green);
 	check.SetBorder(BorderType::Single);
 	check.SetCoordinates(0, 18);
 	check.Show();
@@ -106,10 +106,11 @@ int main() {
 		// Dispatch the events to the appropriate handler. 
 		for (i = 0; i < cNumRead; i++) {
 			//Send the input record to the textbox handler
-			combo.HandleInput(irInBuf[i]);
 			radio.HandleInput(irInBuf[i]);
 			check.HandleInput(irInBuf[i]);
 			text.HandleInput(irInBuf[i]);
+			combo.HandleInput(irInBuf[i]);
+
 		}
 	}
 
