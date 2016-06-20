@@ -3,7 +3,7 @@
 
 
 ComboBox::ComboBox(string* textList, int size, short width, short height, DWORD color) :
-	InterActiveController(0, 0)
+	IControl(0, 0)
 {
 	listSize = size;
 	chosenText = new Label(width, height, "+ chose 1 option:", false);
@@ -13,7 +13,7 @@ ComboBox::ComboBox(string* textList, int size, short width, short height, DWORD 
 }
 
 ComboBox::ComboBox(int width, vector<string> options):
-	InterActiveController(0,0),firstShow(true)
+	IControl(0,0),firstShow(true)
 {
 	listSize = options.size();
 	string defaultText = "+ ";

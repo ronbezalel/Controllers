@@ -29,6 +29,10 @@ public:
 	virtual void SetForeground(ForegroundColor color) = 0;
 	virtual void SetBackground(BackgroundColor color) = 0;
 	virtual void SetBorder(BorderType _border) = 0;
+
+	virtual void KeyEventProc(KEY_EVENT_RECORD ker) {};
+	virtual void MouseEventProc(MOUSE_EVENT_RECORD mer) {};
+	virtual void HandleInput(INPUT_RECORD iRecord) {};
 };
 
 #endif

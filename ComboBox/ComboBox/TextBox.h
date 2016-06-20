@@ -6,11 +6,11 @@
 #include <Windows.h>
 #include <stdio.h>
 #include <iostream>
-#include "InterActiveController.h"
+#include "IControl.h"
 
 using namespace std;
 
-class TextBox : public InterActiveController
+class TextBox : public IControl
 {
 private:
 	vector<char> text;
@@ -31,6 +31,7 @@ private:
 	void MousePressed(MOUSE_EVENT_RECORD mer);
 	void Print();
 	int LastLetterIndex(int position);
+	bool MiddleWrite();
 
 public:
 	TextBox(int boxLength, short width, short height);

@@ -1,8 +1,8 @@
 #include "RadioList.h"
 #include "Label.h"
-#include "InterActiveController.h"
+#include "IControl.h"
 
-class ComboBox : public InterActiveController
+class ComboBox : public IControl
 {
 private:
 	Label* chosenText;

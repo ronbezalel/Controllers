@@ -149,7 +149,6 @@
     <ClInclude Include="CheckList.h" />
     <ClInclude Include="ComboBox.h" />
     <ClInclude Include="IControl.h" />
-    <ClInclude Include="InterActiveController.h" />
     <ClInclude Include="Label.h" />
     <ClInclude Include="RadioList.h" />
     <ClInclude Include="TextBox.h" />
@@ -158,7 +157,6 @@
     <ClCompile Include="CheckList.cpp" />
     <ClCompile Include="ComboBox.cpp" />
     <ClCompile Include="IControl.cpp" />
-    <ClCompile Include="InterActiveController.cpp" />
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RadioList.cpp" />

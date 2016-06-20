@@ -6,10 +6,10 @@
 #include <string>
 #include <iostream>
 #include "Label.h"
-#include "InterActiveController.h"
+#include "IControl.h"
 #include <vector>
 
-class CheckList : public InterActiveController
+class CheckList : public IControl
 {
 protected:
 	vector<Label> list;

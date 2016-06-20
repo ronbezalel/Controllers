@@ -3,7 +3,7 @@
 
 
 TextBox::TextBox(int boxLength, short width, short height) :
-	InterActiveController(0, 0), textIndex(0), focus(false), enableWrite(false)
+	IControl(0, 0), textIndex(0), focus(false), enableWrite(false)
 {
 	boxSize = boxLength;
 	text = vector<char>(boxLength);
@@ -16,7 +16,7 @@ TextBox::TextBox(int boxLength, short width, short height) :
 }
 
 TextBox::TextBox(int width) :
-	InterActiveController(0, 0), textIndex(0), focus(false), enableWrite(false)
+	IControl(0, 0), textIndex(0), focus(false), enableWrite(false)
 {
 	boxSize = width;
 	text = vector<char>(width);
@@ -241,11 +241,49 @@ void TextBox::BackSpace() {
 void TextBox::AddCharecter(char c) {
 	if (focus) {
 		if (textIndex < boxSize) {
+			bool res = MiddleWrite();
+			if (res) {
+				if (text[boxSize - 1] == ' ') {
+					vector<char> tmpState = text;
+					for (int i = textIndex + 1; i < boxSize; i++) {
+						text[i] = tmpState[i - 1];
+						COORD reset = { coord.X + i + 1 , coord.Y + 1 };
+						SetConsoleCursorPosition(handle, reset);
+						cout << text[i];
+					}
+					COORD reset = { coord.X + textIndex + 1 , coord.Y + 1 };
+					SetConsoleCursorPosition(handle, reset);
+					text[textIndex] = c;
+					cout << c;
+					MoveRight();
+					return;
+				}
+				else return;
+			}
+
 			text[textIndex] = c;
 			cout << c;
 			MoveRight();
 		}
 	}
+}
+
+bool TextBox::MiddleWrite() {
+	bool left = false;
+	bool right = false;
+	for (int i = 0; i < textIndex; i++) {
+		if (text[i] != ' ') {
+			left = true;
+			break;
+		}
+	}
+	for (int i = textIndex; i < text.size(); i++) {
+		if (text[i] != ' ') {
+			right = true;
+			break;
+		}
+	}
+	return right && left;
 }
 
 void TextBox::SetText(string textToEnter) {

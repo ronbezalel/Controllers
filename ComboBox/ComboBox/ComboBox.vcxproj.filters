@@ -24,9 +24,6 @@
     <ClInclude Include="CheckList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InterActiveController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ComboBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -45,9 +42,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CheckList.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InterActiveController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">

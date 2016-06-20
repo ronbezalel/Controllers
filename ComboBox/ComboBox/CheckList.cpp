@@ -3,7 +3,7 @@
 
 
 CheckList::CheckList(string* textList, int listSize, short width, short height, DWORD color) :
-	InterActiveController(0, 0), currentRow(0), currentPosition(0), rowMaxLength(0)
+	IControl(0, 0), currentRow(0), currentPosition(0), rowMaxLength(0)
 {
 	int row = 0;
 	coord = { 0 , 0 };
@@ -21,7 +21,7 @@ CheckList::CheckList(string* textList, int listSize, short width, short height, 
 }
 
 CheckList::CheckList(int height, int width, vector<string> options) :
-	InterActiveController(0, 0), currentRow(0), currentPosition(0), rowMaxLength(0), hoverEnable(false), maxRowNumber(height), firstShow(true)
+	IControl(0, 0), currentRow(0), currentPosition(0), rowMaxLength(0), hoverEnable(false), maxRowNumber(height), firstShow(true)
 {
 	//generalDw = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
 	if (options.size() <= height) {

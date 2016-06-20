@@ -20,11 +20,11 @@ int main() {
 
 	/* to test one of the controllers comment the "Label main" and un-commet the requested controller */
 
-	Label label = Label(40, "Eyal & Ron & Yossi");
-	label.SetForeground(ForegroundColor::Green);
-	label.SetCoordinates(20, 0);
-	label.Show();
-	Sleep(2222);
+	//Label label = Label(40, "Eyal & Ron & Yossi");
+	//label.SetForeground(ForegroundColor::Green);
+	//label.SetCoordinates(20, 0);
+	//label.Show();
+	//Sleep(2222);
 	vector<string> list = {
 		"line 1",
 		"line 2",
@@ -38,41 +38,39 @@ int main() {
 	combo.SetBorder(BorderType::None);
 	combo.SetCoordinates(0, 3);
 	combo.Show();
-	Sleep(2222);
-	combo.Hide();
+	//Sleep(2222);
+	//combo.Hide();
 
-	RadioList radio = RadioList(5, 15, list);
-	radio.SetForeground(ForegroundColor::Red);
-	radio.SetBackground(BackgroundColor::Black);
-	radio.SetBorder(BorderType::Double);
-	radio.SetCoordinates(0, 10);
-	radio.Show();
-	Sleep(2222);
-	radio.Hide();
+	//RadioList radio = RadioList(5, 15, list);
+	//radio.SetForeground(ForegroundColor::Red);
+	//radio.SetBackground(BackgroundColor::Black);
+	//radio.SetBorder(BorderType::Double);
+	//radio.SetCoordinates(0, 10);
+	//radio.Show();
+	//Sleep(2222);
+	//radio.Hide();
 
-	CheckList check = CheckList(5, 15, list);
-	check.SetForeground(ForegroundColor::Purple);
-	check.SetBackground(BackgroundColor::Green);
-	check.SetBorder(BorderType::Single);
-	check.SetCoordinates(0, 18);
-	check.Show();
-	Sleep(2222);
-	check.Hide();
+	//CheckList check = CheckList(5, 15, list);
+	//check.SetForeground(ForegroundColor::Purple);
+	//check.SetBackground(BackgroundColor::Green);
+	//check.SetBorder(BorderType::Single);
+	//check.SetCoordinates(0, 18);
+	//check.Show();
+	//Sleep(2222);
+	//check.Hide();
 
-	TextBox text = TextBox(40);
-	text.SetCoordinates(20, 5);
-	text.SetBackground(BackgroundColor::White);
-	text.SetForeground(ForegroundColor::Blue);
-	text.SetBorder(BorderType::Single);
-	text.Show();
-	Sleep(2222);
-	text.Hide();
+	//TextBox text = TextBox(5);
+	//text.SetCoordinates(20, 5);
+	//text.SetBackground(BackgroundColor::White);
+	//text.SetForeground(ForegroundColor::Blue);
+	//text.SetBorder(BorderType::Single);
+	//text.Show();
 
-	combo.Show();
-	radio.Show();
-	text.Show();
-	check.Show();
-	label.Show();
+	//combo.Show();
+	//radio.Show();
+	//text.Show();
+	//check.Show();
+	//label.Show();
 
 
 	DWORD cNumRead, fdwMode, i;
@@ -106,9 +104,9 @@ int main() {
 		// Dispatch the events to the appropriate handler. 
 		for (i = 0; i < cNumRead; i++) {
 			//Send the input record to the textbox handler
-			radio.HandleInput(irInBuf[i]);
-			check.HandleInput(irInBuf[i]);
-			text.HandleInput(irInBuf[i]);
+			//radio.HandleInput(irInBuf[i]);
+			//check.HandleInput(irInBuf[i]);
+			//text.HandleInput(irInBuf[i]);
 			combo.HandleInput(irInBuf[i]);
 
 		}
